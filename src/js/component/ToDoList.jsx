@@ -28,6 +28,7 @@ const ToDoList = () => {
     };
 
     const handleCleanAll = () => {
+        const filteredData = toDos.filter((todo) => todo.label !== "Sample Task");
         setToDos([]);
         setCompletedTodos([]);
         deleteAllTodos();
@@ -38,11 +39,6 @@ const ToDoList = () => {
         toDos.length === 0
             ? "No tasks, add a task"
             : `${activeTodoCount} item${activeTodoCount !== 1 ? "s" : ""} left`;
-
-    // Fetch data on component mount
-    useEffect(() => {
-        getTodo();
-    }, []);
 
     const postApi = () => {
         var myHeaders = new Headers();
@@ -76,17 +72,13 @@ const ToDoList = () => {
         myHeaders.append("Content-Type", "application/json");
 
         const delTodo = toDos.filter((to) => to.id !== id);
-
-        const filteredData = data.filter((todo) => todo.label !== "Sample Task");
+        const filteredData = delTodo.filter((todo) => todo.label !== "Sample Task");
         setToDos(filteredData);
-
-
-        setToDos([...delTodo]);
 
         var raw = JSON.stringify(delTodo);
 
         var requestOptions = {
-            method: "POST",
+            method: "PUT",
             headers: myHeaders,
             body: raw,
             redirect: "follow",
@@ -183,6 +175,10 @@ const ToDoList = () => {
     };
 
 
+    useEffect(() => {
+        getTodo();
+    }, []);
+
     return (
         <div className="bigContainer">
             <h1 className="title">To Do List</h1>
@@ -228,4 +224,3 @@ const ToDoList = () => {
 };
 
 export default ToDoList;
-
