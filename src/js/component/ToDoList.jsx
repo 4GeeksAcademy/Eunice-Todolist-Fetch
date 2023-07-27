@@ -71,11 +71,7 @@ const ToDoList = () => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
-        const delTodo = toDos.filter((to) => to.id !== id);
-        const filteredData = delTodo.filter((todo) => todo.label !== "Sample Task");
-        setToDos(filteredData);
-
-        var raw = JSON.stringify(delTodo);
+        var raw = JSON.stringify(toDos);
 
         var requestOptions = {
             method: "PUT",
@@ -126,9 +122,10 @@ const ToDoList = () => {
 
         fetch("https://fake-todo-list-52f9a4ed80ce.herokuapp.com/todos/user/eunicehg", requestOptions)
             .then((response) => {
-                console.log(response.ok);
-                console.log(response.status);
-                return response.json();
+                if (response.status == "400") {
+                    postApi()
+                } else
+                    return response.json();
             })
             .then((data) => {
                 console.log(data);
@@ -148,7 +145,7 @@ const ToDoList = () => {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
-        var raw = JSON.stringify(toDos);
+        var raw = JSON.stringify([...toDos, { id: uuidv4(), label: inputValue, done: false }]);
 
         var requestOptions = {
             method: "PUT",
